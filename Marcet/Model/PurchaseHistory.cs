@@ -14,27 +14,38 @@ namespace Marcet.Model
 
         public static void payCheck()
         {
-            PayCheck = PayCheck.CreateCheck();
-
-            purchaseHistory.Add(PayCheck);            
+            PayCheck = PayCheck.CreateCheck(); 
+            purchaseHistory.Add(PayCheck);
         }
 
 
-        //public static void qwe()
-        //{
-        //    string type = Console.ReadLine();
-        //    int MoneyForCategory = 0;
-        //    foreach (PayCheck payCheck in purchaseHistory)
-        //    {
-        //        foreach (PurchaseItem purchaseItem in payCheck.PurchaseItems)
-        //        {
-        //            if (purchaseItem.BoughtProduct.Type == type) 
-        //            {
+        public static void MostBoughtProducts() // должно выдавать список из 5 самых популярных товаров 
+        {
+            List<PayCheck> purchaseHistor = Load();
+            List<PurchaseItem> mostBoughtProducts = new List<PurchaseItem>();
+            foreach (PayCheck payCheck in purchaseHistor)
+            {
+                foreach (PurchaseItem purchaseItem in payCheck.PurchaseItems)
+                {
+                    if (purchaseItem.ContaineProduct(mostBoughtProducts) == true)
+                    {
+                        purchaseItem.Quantity += purchaseItem.Quantity;
+                        purchaseItem.Price += purchaseItem.Price;
+                    }
+                    else
+                    {
+                        mostBoughtProducts.Add(purchaseItem);
+                    }
+                }
+            }
 
-        //            }
-        //        }
-        //    }
-        //}
+            SortByQuantity(mostBoughtProducts);
+            for(int i = 0; i < 5; i++)
+            {
+                Console.WriteLine($"имеем за неопределенное время {mostBoughtProducts[i].BoughtProduct.Name } - " +
+                    $"{mostBoughtProducts[i].Quantity } - {mostBoughtProducts[i].Price }");
+            }
+        }
 
         public static void Save()
         {
@@ -52,13 +63,29 @@ namespace Marcet.Model
             {
                 if (fomatter.Deserialize(fs) is List<PayCheck> PurchaseHistory)
                 {
-                    Console.WriteLine("Ok");
+                    Console.WriteLine("Load");
                     return PurchaseHistory;
                 }
                 else
                 {
-                    Console.WriteLine("Не Ok");
+                    Console.WriteLine("Не Load");
                     return null;
+                }
+            }
+        }
+
+        private static void SortByQuantity(List<PurchaseItem> mostBoughtProducts)
+        {
+            for (int i = 0; i < mostBoughtProducts.Count; i++)
+            {
+                for( int j = i+1; j < mostBoughtProducts.Count; j++)
+                {
+                    if (mostBoughtProducts[i].Quantity < mostBoughtProducts[j].Quantity)
+                    {
+                        var t = mostBoughtProducts[i];
+                        mostBoughtProducts[i] = mostBoughtProducts[j];
+                        mostBoughtProducts[j] = t;
+                    }
                 }
             }
         }

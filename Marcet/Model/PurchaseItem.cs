@@ -7,9 +7,9 @@ namespace Marcet.Model
     [Serializable]
     public class PurchaseItem
     {
-        public static Product BoughtProduct { get; set; }
-        public static int Quantity { get; set; }
-        public static double Price { get; set; }
+        public Product BoughtProduct { get; set; }
+        public int Quantity { get; set; }
+        public double Price { get; set; }
 
         public PurchaseItem(Product boughtProduct, int quantity, double price)
         {
@@ -18,25 +18,22 @@ namespace Marcet.Model
             Price = price;
         }
 
-        public static double CalcPrice()
+        public double CalcPrice(Product boughtProduct) // сериализовать список продуктов??
         {
-            double price = Quantity * BoughtProduct.Price;
+            double price = Quantity * boughtProduct.Price;
             return price;
         }
 
-        public static PurchaseItem BoughtItem()
+        public bool ContaineProduct(List<PurchaseItem> mostBoughtProducts)
         {
-            Product boughtProduct = BoughtProduct;
-            Random rnd = new Random();
-            Product product = Product.products[rnd.Next(Product.products.Count)];
-            int quantity = rnd.Next(1, 5);
-            double price = (double)quantity * product.Price;
-            PurchaseItem p = new PurchaseItem(boughtProduct, quantity, price);
-            BoughtProduct = boughtProduct;
-            Console.WriteLine($"{product.Name} {product.Price} - {quantity}");
-            Price = price;
-            return p;
+            foreach (PurchaseItem mostBoughtProduct in mostBoughtProducts)
+            {
+                if (mostBoughtProduct.BoughtProduct.Name == BoughtProduct.Name)
+                {
+                    return true;
+                }               
+            }
+            return false;
         }
-
     }
 }

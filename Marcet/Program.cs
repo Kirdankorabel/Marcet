@@ -10,6 +10,12 @@ namespace Marcet
         {
             Product.CreateNewProducts();
 
+            List<Product> products = Product.Load();
+            //foreach (Product p in products)
+            //{
+            //    Console.WriteLine(p.Name);
+            //}
+
             PurchaseHistory.payCheck();
             PurchaseHistory.payCheck();
             PurchaseHistory.payCheck();
@@ -17,17 +23,21 @@ namespace Marcet
             PurchaseHistory.payCheck();
 
             PurchaseHistory.Save();
-            List<PayCheck>  list = PurchaseHistory.Load();
+            List<PayCheck> list = PurchaseHistory.Load();
+
+            PurchaseHistory.MostBoughtProducts();
+
+            Console.Read();
 
             //foreach (PayCheck p in list)
             //{
             //    Console.WriteLine(p.PurchaseItems.Count);
-            //    foreach (PurchaseItem purchaseItem in p.PurchaseItems) 
+            //    foreach (PurchaseItem purchaseItem in p.PurchaseItems)
             //    {
             //        Console.WriteLine(purchaseItem.BoughtProduct.Name);
             //    }
             //}
-            Console.WriteLine("Hello World!");
+
 
         }
     }
